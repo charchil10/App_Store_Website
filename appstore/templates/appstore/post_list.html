@@ -1,0 +1,12 @@
+{% extends "appstore/header.html" %}
+{% block content %}
+	<div align ="center">
+	<div align= "Left" ><a href="appstore/new/" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Post a New Application</a></div>
+	<h3>List of Applications </h3>
+	</div>
+	{% for i in posts %}
+	<div class="post">
+	<a class = "btn btn-default" href="/appstore/{{i.pk}}">{{ i.appsName}} </a>
+	</div>
+	{% endfor %}
+{% endblock %}

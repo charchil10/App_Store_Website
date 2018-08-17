@@ -1,0 +1,19 @@
+{% extends "appstore/header.html" %}
+{% block content %}
+<div align ="center">
+<h3>Your Reviews</h3>
+</div>
+<Br>
+{for Reviews in models.Reviews %}
+Review for: {{Reviews.post}}
+<h6><div align = "left">{{Reviews.author}}</div> <div align = "right">Updated on: {{Reviews.create_date}}</div></h6>
+{{Reviews.text|safe|linebreaks}}
+<br>
+Rated: {{Reviews.rating}}
+
+<br>
+<br>
+<!--p><a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">  Install  </a>
+<div align ><a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">delete</a></div-->
+
+{% endblock %}

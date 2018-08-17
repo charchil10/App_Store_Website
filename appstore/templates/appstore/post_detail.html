@@ -1,0 +1,49 @@
+{% extends "appstore/header.html" %}
+{% block content %}
+<div class = "post">
+{% if post.update_date %}
+	<div class = "date">
+	{{ post.update_date}}
+	</div>
+{%endif%}
+<div align= "Right" ><a href="edit/" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Edit</a></div>
+<div align ="center">
+<h3>{{post.appsName}}</h3>
+</div>
+<h6><div align = "left"> last updated on: {{post.update_date|date:"Y-m-d"}}</div>
+ <div align = "right">version: {{post.version}}</div></h6>
+{{post.appsDescription|safe|linebreaks}}
+<br>
+<br>
+</div>
+
+<p><a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">  Install  </a>
+
+<br>
+<div align = "center">
+<h4>Reviews by users</h4>
+</div>
+
+<hr>
+{% for comment in post.comments.all %}
+    <div class="comment">
+        <div class="date">{{ comment.created_date }}</div>
+        User: <strong>{{ comment.author }}</strong>
+		<br>
+        Review: {{ comment.text}}
+		<br>
+		Ratings: <strong>{{comment.ratings}}</strong> out of 5
+	    </div>
+	<br>
+
+	<div align= "Left" > <a href="comment/edit/" class="btn btn-default" role="button" aria-pressed="true">Edit Review</a></div>
+<!--div><a<button type="button" class="btn btn-default" href="edit/">Add Review</button></a></div-->
+{% endfor %}
+
+{% for comment in post.comments.all %}
+{% empty %}
+	<p>No comments here yet :(</p>
+<a type="button" class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add Review</a>
+{% endfor %}
+
+{% endblock %}

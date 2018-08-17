@@ -1,0 +1,1772 @@
+function toggle(divCount) {
+
+	var ele = document.getElementById("toggleText"+divCount);
+	var text = document.getElementById("displayText"+divCount);
+	var showText = document.getElementById("showLocation");
+	var hideText = document.getElementById("hideLocation");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = showText.innerHTML;
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = hideText.innerHTML;
+	}
+}
+
+function toggleHoldingDisplay() {
+
+	var ele = document.getElementById("toggleHolding");
+	var text = document.getElementById("displayHolding");
+	var showText = document.getElementById("showHolding");
+	var hideText = document.getElementById("hideHolding");
+	if (ele.style.display == "block") {
+		ele.style.display = "none";
+		text.innerHTML = showText.innerHTML;
+	} else {
+		ele.style.display = "block";
+		text.innerHTML = hideText.innerHTML;
+	}
+}
+
+function handleCalcDigitizationFee (){
+	var $data = $("form[name='uResolverRequestForm']").clone();
+	$data.find("input[name='submitOperation']").remove();
+	$("#digitizationFeeAmount > img").show();
+	$.ajax({
+		type : "POST",
+		url : $data.attr("action"),
+		dataType : "html",
+		data: $data.add().serialize() + "&submitOperation=openRequest",
+		success : function(htmlResponse) {
+			$("#digitizationFeeAmount > span").text($("#digitizationFeeAmount > span", htmlResponse).text()).show();
+			$("#digitizationFeeAmount > img").hide();
+		}
+	});
+}
+
+function togglePartialDigitization(){
+	document.getElementById('submitOperation').value = 'openRequest';
+	document.getElementById('afterPartialDigitizationCheckbox').value = 'true';
+	document.forms[0].submit();
+
+}
+
+function toggleHolding(divCount) {
+
+	var ele = document.getElementById("toggleHolding"+divCount);
+	var text = document.getElementById("displayHolding"+divCount);
+	var showText = document.getElementById("showHolding");
+	var hideText = document.getElementById("hideHolding");
+
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = showText.innerHTML;
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = hideText.innerHTML;
+	}
+}
+
+
+function handleRSLChanged() {
+	document.getElementById('submitOperation').value = 'openRequest';
+	document.forms[0].submit();
+}
+
+function updateFilters(type) {
+
+	document.getElementById('changeValue').value = type.name;
+	document.forms[0].submit();
+}
+
+function showDeliveryLocation() {
+
+
+	if (document.getElementById('hideUserAddress') &&  document.getElementById('hideUserAddress')!='undefined') {
+		return;
+	}
+
+	if(document.getElementsByName('deliveryLocation')[1].checked){ // 'ADD'.
+
+		// Show ADD options.
+		if(document.getElementsByName('format')[0].checked){ // 'PHYSICAL'.
+
+			// Show user address list.
+			document.getElementById('userAddressH').style.display = "";
+			document.getElementById('userAddressSelect').style.display = "";
+			showOrHideManualADD('userAddressSelect', true);
+
+			// Hide user email list.
+			document.getElementById('userEmailH').style.display = "none";
+			document.getElementById('userEmailSelect').style.display = "none";
+			showOrHideManualADD('userEmailSelect', false);
+
+		} else{ // Digital.
+
+			// Hide user address list.
+			document.getElementById('userAddressH').style.display = "none";
+			document.getElementById('userAddressSelect').style.display = "none";
+			showOrHideManualADD('userAddressSelect', false);
+
+			// Show user email list.
+			document.getElementById('userEmailH').style.display = "";
+			document.getElementById('userEmailSelect').style.display = "";
+			showOrHideManualADD('userEmailSelect', true);
+		}
+
+	} else{ // 'LIBRARY'.
+
+		// Hide ADD options.
+		document.getElementById('userAddressH').style.display = "none";
+		document.getElementById('userAddressSelect').style.display = "none";
+		document.getElementById('userEmailH').style.display = "none";
+		document.getElementById('userEmailSelect').style.display = "none";
+		showOrHideManualADD('userAddressSelect', false);
+		showOrHideManualADD('userEmailSelect', false);
+	}
+
+	if (document.getElementById('fulfillmentNetworkPartnetExist').value == 'true') {
+		if(document.getElementsByName('format')[0].checked){
+			document.getElementById('preferredPickupInstitutionV').style.display = "";
+			document.getElementById('preferredPickupInstitutionH').style.display = "";
+
+			var selectObj = document.getElementById('preferredPickupInstitutionInput');
+			var currentInstitutionCode = document.getElementById('currentInstitutionCode').value;
+			console.log(selectObj);
+			console.log("--");
+			console.log(currentInstitutionCode);
+			for (var i = 0; i < selectObj.options.length; i++) {
+		        if (selectObj.options[i].value == currentInstitutionCode) {
+		        	console.log(selectObj.options[i].value);
+		            selectObj.options[i].selected = true;
+		            return;
+		        }
+		    }
+		}
+		else {
+			document.getElementById('preferredPickupInstitutionV').style.display = "none";
+			document.getElementById('preferredPickupInstitutionH').style.display = "none";
+
+			if (document.getElementById('preferredPickupLibraryInstitutionV')) {
+				document.getElementById('preferredPickupLibraryInstitutionV').style.display = "none";
+				document.getElementById('preferredPickupLibraryInstitutionH').style.display = "none";
+				document.getElementById('allowOtherLibraryV').style.display = "none";
+				document.getElementById('allowOtherLibraryH').style.display = "none";
+			}
+		}
+	}
+}
+
+function showOrHideManualADD(comboBoxId, enable){
+	var comboElement = document.getElementById(comboBoxId);
+
+	if(comboBoxId == 'userAddressSelect'){
+		if(!enable || comboElement.value != 'USE_DIFFERENT_ADDRESS'){
+			document.getElementById('postalLine1').style.display = "none";
+			document.getElementById('textPostal1').style.display = "none";
+			document.getElementById('postalLine2').style.display = "none";
+			document.getElementById('textPostal2').style.display = "none";
+			document.getElementById('postalLine3').style.display = "none";
+			document.getElementById('textPostal3').style.display = "none";
+			document.getElementById('postalLine4').style.display = "none";
+			document.getElementById('textPostal4').style.display = "none";
+		} else {
+			document.getElementById('postalLine1').style.display = "";
+			document.getElementById('textPostal1').style.display = "";
+			document.getElementById('postalLine2').style.display = "";
+			document.getElementById('textPostal2').style.display = "";
+			document.getElementById('postalLine3').style.display = "";
+			document.getElementById('textPostal3').style.display = "";
+			document.getElementById('postalLine4').style.display = "";
+			document.getElementById('textPostal4').style.display = "";
+		}
+	}
+
+	if(comboBoxId == 'userEmailSelect'){
+		if(!enable || comboElement.value != 'USE_DIFFERENT_EMAIL'){
+			document.getElementById('textEmailH').style.display = "none";
+			document.getElementById('textEmailV').style.display = "none";
+		} else {
+			document.getElementById('textEmailH').style.display = "";
+			document.getElementById('textEmailV').style.display = "";
+		}
+	}
+
+}
+
+function showCitationTypePR(type) {
+
+	if (type =='book') {
+		// Show book fields:
+		document.getElementById("isbnH").style.display = "";
+		document.getElementById("isbnV").style.display = "";
+
+    	// Hide journal fields:
+		document.getElementById("issnH").style.display = "none";
+		document.getElementById("issnV").style.display = "none";
+
+
+	} else {
+
+		// Hide book fields:
+		document.getElementById("isbnH").style.display = "none";
+		document.getElementById("isbnV").style.display = "none";
+
+		// Show journal fields:
+		document.getElementById("issnH").style.display = "";
+		document.getElementById("issnV").style.display = "";
+
+	}
+
+	// Set mandatory fields
+	var fields = document.getElementById("mandatoryfieldsInput");
+	for (var i=0; i<fields.length; i++){
+	    var value=fields.options[i].value;
+	    if (value =='dc:title'){
+	    	document.getElementById("mandatory_title").style.display = "";
+	    }
+	}
+
+}
+
+function showCitationTypeSection(type) {
+	var multiRSl = document.getElementById('multiRSl').value;
+
+	if (multiRSl=='false'){
+		document.getElementById("ownerH").style.display = "none";
+		document.getElementById("ownerInput").style.display = "none";
+	}else{
+		document.getElementById("ownerH").style.display = "";
+		document.getElementById("ownerInput").style.display = "";
+	}
+
+
+	resetMandatoryfields();
+	if (type =='book') {
+
+		// Show book fields:
+		document.getElementById("bookTitleH").style.display = "";
+		document.getElementById("bookTitleV").style.display = "";
+		document.getElementById("isbnH").style.display = "";
+		document.getElementById("isbnV").style.display = "";
+		document.getElementById("volumeH").style.display = "";
+		document.getElementById("volumeV").style.display = "";
+		document.getElementById("partH").style.display = "";
+		document.getElementById("partV").style.display = "";
+		document.getElementById("editionH").style.display = "";
+		document.getElementById("editionV").style.display = "";
+		document.getElementById("lccNumberInput").style.display = "";
+		document.getElementById("oclcNumberInput").style.display = "";
+		document.getElementById("specificEditionH").style.display = "";
+		document.getElementById("specificEditionV").style.display = "";
+
+    	// Hide article fields:
+		document.getElementById("articleTitleH").style.display = "none";
+		document.getElementById("articleTitleV").style.display = "none";
+		document.getElementById("journalVolumeH").style.display = "none";
+		document.getElementById("journalVolumeV").style.display = "none";
+		document.getElementById("journalIssueH").style.display = "none";
+		document.getElementById("journalIssueV").style.display = "none";
+		document.getElementById("journalTitleH").style.display = "none";
+		document.getElementById("journalTitleV").style.display = "none";
+		document.getElementById("issnH").style.display = "none";
+		document.getElementById("issnV").style.display = "none";
+		document.getElementById("startPageH").style.display = "none";
+		document.getElementById("startPageV").style.display = "none";
+		document.getElementById("endPageH").style.display = "none";
+		document.getElementById("endPageV").style.display = "none";
+		document.getElementById("doiH").style.display = "none";
+		document.getElementById("doiV").style.display = "none";
+		document.getElementById("pmidH").style.display = "none";
+		document.getElementById("pmidV").style.display = "none";
+		document.getElementById("pagerOrPages").style.display = "none";
+
+		// Set book mandatory fields
+		setBookMandatoryfields();
+
+	} else {
+
+		// Hide book fields:
+		document.getElementById("bookTitleH").style.display = "none";
+		document.getElementById("bookTitleV").style.display = "none";
+		document.getElementById("isbnH").style.display = "none";
+		document.getElementById("isbnV").style.display = "none";
+		document.getElementById("volumeH").style.display = "none";
+		document.getElementById("volumeV").style.display = "none";
+		document.getElementById("partH").style.display = "none";
+		document.getElementById("partV").style.display = "none";
+		document.getElementById("editionH").style.display = "none";
+		document.getElementById("editionV").style.display = "none";
+		document.getElementById("specificEditionH").style.display = "none";
+		document.getElementById("specificEditionV").style.display = "none";
+
+		// Show article fields:
+		document.getElementById("articleTitleH").style.display = "";
+		document.getElementById("articleTitleV").style.display = "";
+		document.getElementById("journalVolumeH").style.display = "";
+		document.getElementById("journalVolumeV").style.display = "";
+		document.getElementById("journalIssueH").style.display = "";
+		document.getElementById("journalIssueV").style.display = "";
+		document.getElementById("journalTitleH").style.display = "";
+		document.getElementById("journalTitleV").style.display = "";
+		document.getElementById("issnH").style.display = "";
+		document.getElementById("issnV").style.display = "";
+		document.getElementById("startPageH").style.display = "";
+		document.getElementById("startPageV").style.display = "";
+		document.getElementById("endPageH").style.display = "";
+		document.getElementById("endPageV").style.display = "";
+		document.getElementById("doiH").style.display = "";
+		document.getElementById("doiV").style.display = "";
+		document.getElementById("pmidH").style.display = "";
+		document.getElementById("pmidV").style.display = "";
+		document.getElementById("pagerOrPages").style.display = "";
+		document.getElementById("lccNumberInput").style.display = "";
+		document.getElementById("oclcNumberInput").style.display = "";
+
+		// Set article mandatory fields
+		setArticleMandatoryfields();
+
+	}
+}
+
+
+function setArticleMandatoryfields(){
+	var fields = document.getElementById("articleMandatoryfieldsInput");
+	for (var i=0; i<fields.length; i++){
+	    var value=fields.options[i].value;
+	    if (value =='dc:rlterms_additionalPersonName'){
+	    	document.getElementById("mandatory_add_auth").style.display = "";
+	    }
+	    if (value =='dc:title'){
+	    	document.getElementById("mandatory_article_title").style.display = "";
+	    }
+	    if (value =='dc:creator'){
+	    	document.getElementById("mandatory_authors").style.display = "";
+	    }
+	    if (value =='dc:author_initials'){
+	    	document.getElementById("mandatory_auth_init").style.display = "";
+	    }
+	    if (value =='dc:rlterms_chapter'){
+	    	document.getElementById("mandatory_chapter").style.display = "";
+	    }
+	    if (value =='dc:doi'){
+	    	document.getElementById("mandatory_doi").style.display = "";
+	    }
+	    if (value =='dc:identifier_issn'){
+	    	document.getElementById("mandatory_issn").style.display = "";
+	    }
+	    if (value =='dc:rlterms_issue'){
+	    	document.getElementById("mandatory_issue").style.display = "";
+	    }
+	    if (value =='dc:rlterms_journalTitle'){
+	    	document.getElementById("mandatory_journal_title").style.display = "";
+	    }
+	    if (value =='dc:pmid'){
+	    	document.getElementById("mandatory_pmid").style.display = "";
+	    }
+	    if (value =='dc:rlterms_pages'){
+	    	document.getElementById("mandatory_pages").style.display = "";
+	    }
+	    if (value =='dc:start_page'){
+	    	document.getElementById("mandatory_s_page").style.display = "";
+	    }
+	    if (value =='dc:end_page'){
+	    	document.getElementById("mandatory_e_page").style.display = "";
+	    }
+	    if (value =='dc:date'){
+	    	document.getElementById("mandatory_year").style.display = "";
+	    }
+	    if (value =='dc:publisher'){
+	    	document.getElementById("mandatory_pub").style.display = "";
+	    }
+	    if (value =='dc:rlterms_placeOfPublication'){
+	    	document.getElementById("mandatory_place").style.display = "";
+	    }
+	    if (value =='dc:source'){
+	    	document.getElementById("mandatory_source").style.display = "";
+	    }
+	    if (value =='dc:rlterms_volumePartNumber'){
+	    	document.getElementById("mandatory_journal_volume").style.display = "";
+	    }
+	    if (value =='dc:rlterms_year'){
+	    	document.getElementById("mandatory_year").style.display = "";
+	    }
+	    if (value =='dc:series_title_number'){
+	    	document.getElementById("mandatory_series").style.display = "";
+	    }
+	    if (value =='dc:rlterms_note'){
+	    	document.getElementById("mandatory_comment").style.display = "";
+	    }
+	    if (value =='dc:lcc_number'){
+	    	document.getElementById("mandatory_lcc_number").style.display = "";
+	    }
+	    if (value =='dc:oclc_number'){
+	    	document.getElementById("mandatory_oclc_number").style.display = "";
+	    }
+
+	}
+}
+
+
+function setBookMandatoryfields(){
+	var fields = document.getElementById("bookMandatoryfieldsInput");
+	for (var i=0; i<fields.length; i++){
+	    var value=fields.options[i].value;
+	    if (value =='dc:rlterms_additionalPersonName'){
+	    	document.getElementById("mandatory_add_auth").style.display = "";
+	    }
+	    if (value =='dc:creator'){
+	    	document.getElementById("mandatory_authors").style.display = "";
+	    }
+	    if (value =='dc:author_initials'){
+	    	document.getElementById("mandatory_auth_init").style.display = "";
+	    }
+	    if (value =='dc:rlterms_chapter'){
+	    	document.getElementById("mandatory_chapter").style.display = "";
+	    }
+	    if (value =='dc:identifier_isbn'){
+	    	document.getElementById("mandatory_isbn").style.display = "";
+	    }
+	    if (value =='dc:rlterms_pages'){
+	    	document.getElementById("mandatory_pages").style.display = "";
+	    }
+	    if (value =='dc:part'){
+	    	document.getElementById("mandatory_part").style.display = "";
+	    }
+	    if (value =='dc:rlterms_placeOfPublication'){
+	    	document.getElementById("mandatory_place").style.display = "";
+	    }
+	    if (value =='dc:date'){
+	    	document.getElementById("mandatory_year").style.display = "";
+	    }
+	    if (value =='dc:publisher'){
+	    	document.getElementById("mandatory_pub").style.display = "";
+	    }
+	    if (value =='dc:series_title_number'){
+	    	document.getElementById("mandatory_series").style.display = "";
+	    }
+	    if (value =='dc:source'){
+	    	document.getElementById("mandatory_source").style.display = "";
+	    }
+	    if (value =='dc:title'){
+	    	document.getElementById("mandatory_title").style.display = "";
+	    }
+	    if (value =='dc:volume'){
+	    	document.getElementById("mandatory_volume").style.display = "";
+	    }
+	    if (value =='dc:rlterms_note'){
+	    	document.getElementById("mandatory_comment").style.display = "";
+	    }
+	    if (value =='dc:rlterms_edition'){
+	    	document.getElementById("mandatory_edition").style.display = "";
+	    }
+	    if (value =='dc:lcc_number'){
+	    	document.getElementById("mandatory_lcc_number").style.display = "";
+	    }
+	    if (value =='dc:oclc_number'){
+	    	document.getElementById("mandatory_oclc_number").style.display = "";
+	    }
+
+	}
+}
+
+function resetMandatoryfields(){
+	document.getElementById("mandatory_title").style.display = "none";
+	document.getElementById("mandatory_article_title").style.display = "none";
+	document.getElementById("mandatory_journal_title").style.display = "none";
+	document.getElementById("mandatory_authors").style.display = "none";
+	document.getElementById("mandatory_auth_init").style.display = "none";
+	document.getElementById("mandatory_volume").style.display = "none";
+	document.getElementById("mandatory_issue").style.display = "none";
+	document.getElementById("mandatory_isbn").style.display = "none";
+	document.getElementById("mandatory_issn").style.display = "none";
+	document.getElementById("mandatory_doi").style.display = "none";
+	document.getElementById("mandatory_pmid").style.display = "none";
+	document.getElementById("mandatory_pub").style.display = "none";
+	document.getElementById("mandatory_year").style.display = "none";
+	document.getElementById("mandatory_place").style.display = "none";
+	document.getElementById("mandatory_add_auth").style.display = "none";
+	document.getElementById("mandatory_part").style.display = "none";
+	document.getElementById("mandatory_chapter").style.display = "none";
+	document.getElementById("mandatory_source").style.display = "none";
+	document.getElementById("mandatory_series").style.display = "none";
+	document.getElementById("mandatory_pages").style.display = "none";
+	document.getElementById("mandatory_s_page").style.display = "none";
+	document.getElementById("mandatory_e_page").style.display = "none";
+	document.getElementById("mandatory_journal_volume").style.display = "none";
+	document.getElementById("mandatory_lcc_number").style.display = "none";
+	document.getElementById("mandatory_oclc_number").style.display = "none";
+
+}
+
+function handleAcceptCopyrights() {
+	var ele = document.getElementById("acceptCopyrights");
+	var btn = document.getElementById("submitILLRequest");
+
+	if (ele.checked) {
+		btn.disabled = false;
+		btn.className = "submit";
+	} else {
+		btn.disabled = true;
+		btn.className = "submit disabled";
+	}
+}
+
+
+
+
+function updateSelectedService(type) {
+
+	document.getElementById('changeValue').value = type.name;
+	document.forms[0].submit();
+}
+
+function cancelIt(evt) {
+	var e = (typeof evt != 'undefined') ? evt : event;
+	e.cancelBubble = true;
+}
+
+function switchRequestType(type) {
+
+	if (type =='hold') {
+
+		document.getElementById('requestType').value = "available";
+
+
+	} else { // Booking
+
+		document.getElementById('requestType').value = "booking";
+	}
+
+	document.getElementById('changeRequestType').value = "true";
+
+	document.forms[0].submit();
+}
+
+function onlyNumbers(e){
+    var keynum;
+    var keychar;
+
+    if(window.event){  // IE
+        keynum = e.keyCode;
+    }
+    if(e.which){ // Netscape/Firefox/Opera
+        keynum = e.which;
+    }
+
+    if((keynum == 8 || keynum == 9 || keynum == 46 || (keynum >= 35 && keynum <= 40) || (e.keyCode >= 96 && e.keyCode <= 105))) {
+    	return true;
+    }
+
+    keychar = String.fromCharCode(keynum);
+
+    return !isNaN(keychar);
+}
+
+
+
+
+/*******************************************************************************
+ * ******************************************************************
+ * ************************ DATE AND TIME *************************
+ * ****************************************************************** Created
+ * July 2013 **********************/
+/* ******************************************************************************/
+
+var minYear=1900;
+var maxYear=2099;
+
+function invalidDateDisplay(obj)
+{
+	$('#'+obj.id+'month').val('0');
+	$('#'+obj.id+'day').val('0');
+	$('#'+obj.id+'year').val('0');
+	$('#'+obj.id).val("");
+	$('#'+obj.id).parent().addClass("errorInForm");
+}
+function invalidTimeDisplay(obj)
+{
+	$('#'+obj.id+'hours').val('');
+	$('#'+obj.id+'minutes').val('');
+	$('#'+obj.id+'Hiddenhours').val('');
+	$('#'+obj.id+'Hiddenminutes').val('');
+	if($('#'+obj.id+'ampm'))$('#'+obj.id+'ampm').val("");
+	$('#'+obj.id).val("");
+	$('#'+obj.id).parent().addClass("errorInForm");
+}
+function resetDateValues(fieldId){
+	document.getElementById(fieldId).value='';
+	document.getElementById(fieldId+'month').value='0';
+	document.getElementById(fieldId+'day').value='0';
+	document.getElementById(fieldId+'year').value='0';
+	// hide all error messages belonging to specific date field
+	$('.jsDateError'+fieldId).addClass("hide");
+	$('.jsDateError'+fieldId).removeClass("inlineDisplay");
+	$('#'+fieldId).parent().removeClass('errorInForm');
+	return false;
+}
+function resetDateAndTimeValues(fieldId){
+	resetDateValues(fieldId);
+	document.getElementById(fieldId+"TimeInput").value='';
+	document.getElementById(fieldId+'TimeInputhours').value='';
+	document.getElementById(fieldId+'TimeInputminutes').value='';
+	document.getElementById(fieldId+'TimeInputHiddenhours').value='99';
+	document.getElementById(fieldId+'TimeInputHiddenminutes').value='99';
+	$('.jsTimeError'+fieldId+"TimeInput").addClass("hide");
+	$('.jsTimeError'+fieldId+"TimeInput").removeClass("inlineDisplay");
+	$('#'+fieldId+"TimeInput").parent().removeClass('errorInForm');
+	var ampmObj=document.getElementById(fieldId+'TimeInputampm');
+	if(ampmObj)ampmObj.value='';
+	return false;
+}
+function isValidPastDate(pastDate, dateFormat) {
+	// NOTE: JavaScript dates are in the format of MM/dd/yyyy therefore need to
+	// create a date
+	// object using the datePicker's utility where you can specify a format to
+	// be used to create the date object
+	var pDate=$.datepicker.parseDate( dateFormat, pastDate, "" );
+	var currentDate=new Date;
+	// Don't want to compare the time when chosing today's date
+	currentDate.setHours(0,0,0,0);
+	if (pDate > currentDate)
+		return false;
+	return true;
+}
+
+function isValidFutureDate(futureDate, dateFormat) {
+	// NOTE: JavaScript dates are in the format of MM/dd/yyyy therefore need to
+	// create a date
+	// object using the datePicker's utility where you can specify a format to
+	// be used to create the date object
+	var fDate=$.datepicker.parseDate( dateFormat, futureDate, "" );
+	var currentDate=new Date;
+	// Don't want to compare the time when chosing today's date
+	currentDate.setHours(0,0,0,0);
+	if(fDate < currentDate)
+	 return false;
+	return true;
+}
+
+function calendarDateRender(dateFormat, calendarType){
+	// By default the datepicker isn't limited -
+	// if min and max year are null isn't limited (datepicker functionality)
+	pickerMaxDate=null;
+	pickerMinDate=null;
+	if(calendarType=="jsCalendarFutureOnly") {
+		pickerMinDate=new Date;
+	}
+	else if(calendarType=="jsCalendarPastOnly")	{
+		pickerMaxDate=new Date;
+	}
+
+	$('.'+calendarType).each(function (index, element) {
+		// Enter key behavior in datepicker is that it displays today's date in
+		// a few cases, bypassing the validation.
+		// :. Catch the ENTER keydown, trigger the TAB keydown on the field,
+		// return false - will prevent the default ENTER key behavior
+		$('#'+this.id).bind('keydown', function(event) {
+			// 13=ENTER, 27=ESC
+			if (event.which == 13||event.which == 27) {
+				var e = jQuery.Event("keydown");
+				e.which = 9;
+				e.keyCode = 9;
+				$(this).trigger(e);
+		    	// When using the ESC and Enter keys to close the datepicker,
+				// focus stays on the textbox, need to remove the focus for the
+				// datepicker to open up again
+				$(this).blur();
+				return false;
+			}
+		});
+		// If date field has a value already, present this date in the
+		// datepicker
+		var dayObject = document.getElementById(this.id+'day');
+		var dayVal = dayObject.options[dayObject.selectedIndex].text;
+
+		var monthObject = document.getElementById(this.id+'month');
+		var monthVal = monthObject.options[monthObject.selectedIndex].text;
+
+		var yearObject = document.getElementById(this.id+'year');
+		var yearVal = yearObject.options[yearObject.selectedIndex].text;
+
+		if(dayVal!='DD' && monthVal!='MM' && yearVal!='YYYY'){
+			var inputDate = new Date(yearVal,monthVal-1,dayVal);
+			var fixDate = $.datepicker.formatDate(dateFormat, inputDate);
+			$('#'+this.id).val(fixDate);
+		}
+		// Datepicker initialization
+		$(element).datepicker({
+			dateFormat: dateFormat,
+			changeMonth: true,
+			changeYear: true,
+			yearRange: minYear+":"+maxYear,
+			constrainInput: true,
+		    minDate: pickerMinDate,
+		    maxDate: pickerMaxDate,
+		    onClose: function(dateText, inst) {
+		    	$('.jsDateError'+this.id).addClass("hide");
+		    	$('.jsDateError'+this.id).removeClass("inlineDisplay");
+		    	$('#'+this.id).parent().removeClass("errorInForm");
+		    	if (dateText != "") {
+		    		isValid = 1;
+		    		// will try to create a date object with the value from the
+					// input box - if fails - date is invalid
+					try
+					{
+						userDate=$.datepicker.parseDate(dateFormat, dateText, "");
+					}
+					catch(err)
+					{
+						invalidDateDisplay(this);
+						$('#errorFor'+this.id).removeClass("hide");
+						$('#errorFor'+this.id).addClass("inlineDisplay");
+						isValid=0;
+					}
+					if ((calendarType=="jsCalendarPastOnly") && isValid && !isValidPastDate(dateText, dateFormat))
+					{
+						invalidDateDisplay(this);
+						$('#PastErrorFor'+this.id).removeClass("hide");
+						$('#PastErrorFor'+this.id).addClass("inlineDisplay");
+						isValid=0;
+					}
+					else if((calendarType=="jsCalendarFutureOnly") && isValid && !isValidFutureDate(dateText, dateFormat))
+					{
+						invalidDateDisplay(this);
+						$('#FutureErrorFor'+this.id).removeClass("hide");
+						$('#FutureErrorFor'+this.id).addClass("inlineDisplay");
+						isValid=0;
+					}
+					else if (isValid)
+					{
+						// Save the new value from the datepicker in the hidden
+						// combos
+						// Day & month, if less than 10, attach the preceding
+						// '0' to match the value in the combobox
+						if($('#'+this.id).datepicker("getDate").getDate()<10)
+								pickerDay=('0'+''+$('#'+this.id).datepicker("getDate").getDate());
+						else pickerDay=($('#'+this.id).datepicker("getDate").getDate());
+
+						if($('#'+this.id).datepicker("getDate").getMonth()+1<10){
+								pickerMonth=('0'+($('#'+this.id).datepicker("getDate").getMonth()+1+''));
+							}
+						else {
+								pickerMonth=($('#'+this.id).datepicker("getDate").getMonth()+1);
+							}
+						pickerYear=$('#'+this.id).datepicker("getDate").getFullYear();
+
+						$('#'+this.id+'day').val(pickerDay);
+						$('#'+this.id+'month').val(pickerMonth);
+						$('#'+this.id+'year').val(pickerYear);
+
+						// check if possible to insert the values from the
+						// datepicker into the hidden combos, otherwise - date
+						// is out of the range
+						if(($('#'+this.id+'day').val()!=pickerDay)||($('#'+this.id+'month').val()!=pickerMonth)||($('#'+this.id+'year').val()!=pickerYear)){
+							invalidDateDisplay(this);
+							$('#errorFor'+this.id).removeClass("hidden");
+							$('#errorFor'+this.id).addClass("inlineDisplay");
+
+						}
+					}
+				}
+		    	// if user manually backspaced the content of the input
+		    	else{
+		    		resetDateValues(this.id);
+		    	}
+
+		    }
+		});
+
+	});
+
+}
+/** ***************DATE AND TIME FIELD*********************** */
+
+// A UI componenet adding time functionality to the date field
+/**
+ * function called on page rendering binds the JS events to the time field
+ */
+function initTimeField(timeFormat){
+	/** **REMOVE THIS WHEN UPGRADE JQUERY***** */
+	// Used to allow the is() function, to test the focused element
+	jQuery.expr[':'].focus = function( elem ) {
+		  return elem === document.activeElement && ( elem.type || elem.href );
+		};
+	/** ************** */
+	timeClass="jsTimeField";
+	$('.'+timeClass).each(function (index, element) {
+			// MOUSEUP anywhere on the page will close the popups
+			$(document).mouseup(function (e){
+				   if(!($('#'+element.id+"Popup").hasClass("hide"))){
+				    if($('#'+element.id+"PopupClose").is(":focus"))return false;
+				    if($('#'+element.id+"hours").is(":focus"))return false;
+					if($('#'+element.id+"minutes").is(":focus"))return false;
+					if($('#'+element.id+"ampm").is(":focus"))return false;
+					if($('#'+element.id).is(":focus"))return false;
+					$('#'+element.id+"PopupClose").click();
+				   }
+				});
+			// FOCUS on field will open the popup
+			$(this).focus( function(){
+				$('#'+this.id+"Popup").removeClass("hide");
+			});
+			// CHANGE of visible cobos on popup
+			$('.jsTimeCombos'+element.id).change(function(){
+				assignComboValuesToText(element,timeFormat);
+			});
+			// KEYDOWN in combos - want to catch the tab and trigger the close
+			$('.jsTimeCombos'+element.id).keydown(function(event){
+				var e = event || window.event;
+				// Tab key - will process like clicking on the Apply button in
+				// the popup
+				if(e.which==9||e.keyCode==9){
+		    		$('#'+element.id+"PopupClose").click();
+		    	}
+			});
+			// CLICK on the Apply button on the popup will run teh validation
+			// and closer the popup
+			// The close is triggered from other places as well and "finalizes"
+			// the time
+			$('.jsTimePopupClose'+element.id).click( function(){
+				finalizeDateAndTime(timeFormat,element);
+			});
+			// KEYDOWN in text box - used to suppress un-supported keys
+			$(this).keydown(function(event){
+				suppressChar(event, element);
+			});
+	});
+	return false;
+}
+function finalizeDateAndTime(timeFormat, element){
+	$('.jsTimeError'+element.id).addClass("hide");
+	$('.jsTimeError'+element.id).removeClass("inlineDisplay");
+	$('#'+element.id).parent().removeClass("errorInForm");
+	// if the text box has a value
+	// 1. validates the value (see doc of validation)
+	// 2. If invalid, will display an error
+	// 3. close (hide) popup
+	if($('#'+element.id).val()!=""){
+		// check that is not empty
+		if(!validateDateAndTime(element, timeFormat)){
+			invalidTimeDisplay(element);
+			$('#timeErrorFor'+element.id).removeClass("hide");
+			$('#timeErrorFor'+element.id).addClass("inlineDisplay");
+			$('#'+element.id+"Popup").addClass("hide");
+			return false;
+		}
+	}
+	// If the textbox was empty clear the popup combos and hidden combos
+	else{
+		assignValuesToCombo("","","",timeFormat,element);
+	}
+	$('#'+element.id+"Popup").addClass("hide");
+	// Support change on timefield
+}
+function is12HourClockFormat(timeFormat){
+	if(timeFormat=="hh:mm a"){
+		return true;
+	}
+	return false;
+}
+// function validates the time input box and assigns the values to the popup
+// combos and hidden combos
+function validateDateAndTime(element, timeFormat){
+	var ampm="";
+	// get input value and remove trailing whitespace
+	var timeStr=$.trim($('#'+element.id).val());
+	if(timeFormat=="hh:mm a"){
+		ampm=timeStr.substring(timeStr.length-2).toUpperCase();
+		if(ampm!="AM"&&ampm!="PM"){
+			return false;
+		}
+		timeStr=timeStr.substring(0,timeStr.length-2)
+		timeStr=$.trim(timeStr);
+	}
+	if(timeStr.length>5){return false}
+	var timeValues = timeStr.split(":");
+	if(!timeValues[1]){
+		if(timeStr.length<4)return false;// when no colon is entered we only
+											// support a four digit time
+		timeValues[0]=timeStr.substring(0,2);
+		timeValues[1]=timeStr.substring(2,timeStr.length);// timeStr.length)/2
+	}
+	if(timeFormat=="hh:mm a"&&timeValues[0]==0)return false;
+	if(timeValues[0]<0||timeValues[1]<0||timeValues[0]>23||timeValues[1]>59)return false;
+
+	if(timeValues[0].length==1)timeValues[0]="0"+timeValues[0];
+	if(timeValues[1].length==1)timeValues[1]="0"+timeValues[1];
+	// Assign to poupcombos
+	if(!assignValuesToCombo(timeValues[0],timeValues[1],ampm.toUpperCase(),timeFormat,element))return false;
+	// Assign to hidden combos
+	assignComboValuesToText(element,timeFormat);
+	return true;
+}
+// functions assigns popup combos to the text box
+function assignComboValuesToText(element,timeFormat){
+	var hour="";
+	var minute="";
+	var ampm="";
+	var timeStr="";
+	if(is12HourClockFormat(timeFormat)){
+		ampm=$('#'+element.id+'ampm').val();
+	}
+	hour=$('#'+element.id+'hours').val();
+	minute=$('#'+element.id+'minutes').val();
+		// assign new value only if user entered values in all combos
+		if(hour!=""&&minute!=""){
+			timeStr=hour+":"+minute;
+			if(is12HourClockFormat(timeFormat)){
+				if(ampm=="")return false;
+				timeStr=timeStr+" "+ampm;
+			}
+			$('#'+element.id).val(timeStr);
+			// will re-assign the values to both hidden and displayed combos
+			assignValuesToCombo(hour, minute, ampm, timeFormat,element);
+		}
+		// Clear if both are empty
+		if(hour==""&&minute==""){
+			timeStr="";
+			$('#'+element.id).val(timeStr);
+			// will re-assign the values to both hidden and displayed combos
+			assignValuesToCombo(hour, minute, ampm, timeFormat,element);
+		}
+}
+// function assigns values to the popup combos
+function assignValuesToCombo(hour, minute, ampm, timeFormat,element){
+	if(!$('#'+element.id+'hours').val(""))return false;
+	if(!$('#'+element.id+'minutes').val(""))return false;
+	if(!$('#'+element.id+'Hiddenhours').val("99"))return false;
+	if(!$('#'+element.id+'Hiddenminutes').val("99"))return false;
+	if(hour!="" && minute!=""){
+		var hourHidden=hour;
+		if(is12HourClockFormat(timeFormat)){
+			oldValue=$('#'+element.id+'ampm').val();
+			$('#'+element.id+'ampm').val("");
+				$('#'+element.id+'ampm option[selcted=selected]').removeAttr("selected");
+				$('#'+element.id+'ampm option[value='+ampm+']').attr("selected", "selected");
+				if(ampm=="PM"){
+					hourHidden=parseFloat(hour)+12;
+					if(hourHidden==24)hourHidden="00";
+				}
+		}
+		$('#'+element.id+'hours').val(hour);
+		$('#'+element.id+'minutes').val(minute);
+		$('#'+element.id+'Hiddenhours').val(hourHidden);
+		$('#'+element.id+'Hiddenminutes').val(minute);
+		if($('#'+element.id+'hours').val()==""||$('#'+element.id+'minutes').val()==""||$('#'+element.id+'Hiddenhours').val()==""||$('#'+element.id+'Hiddenminutes').val()=="")return false;
+	}
+	return true;
+}
+// function used to suppress user input
+function suppressChar(event,element){
+
+	keyCodeToChar = {8:"Backspace",9:"Tab",13:"Enter",16:"Shift",17:"Ctrl",18:"Alt",20:"Caps Lock",27:"Esc",32:"Space",33:"Page Up",34:"Page Down",35:"End",36:"Home",37:"Left",38:"Up",39:"Right",40:"Down",45:"Insert",46:"Delete",48:"0",49:"1",50:"2",51:"3",52:"4",53:"5",54:"6",55:"7",56:"8",57:"9",59:":",65:"A",77:"M",80:"P",96:"Numpad 0",97:"Numpad 1",98:"Numpad 2",99:"Numpad 3",100:"Numpad 4",101:"Numpad 5",102:"Numpad 6",103:"Numpad 7",104:"Numpad 8",105:"Numpad 9",144:"Num Lock",145:"Scroll Lock",186:"colon_2"};
+	keyCharToCode = {"Backspace":8,"Tab":9,"Enter":13,"Shift":16,"Ctrl":17,"Alt":18,"Caps Lock":20,"Esc":27,"Space":32,"Page Up":33,"Page Down":34,"End":35,"Home":36,"Left":37,"Up":38,"Right":39,"Down":40,"Insert":45,"Delete":46,"0":48,"1":49,"2":50,"3":51,"4":52,"5":53,"6":54,"7":55,"8":56,"9":57,":":59,"A":65,"M":77,"P":80,"Numpad 0":96,"Numpad 1":97,"Numpad 2":98,"Numpad 3":99,"Numpad 4":100,"Numpad 5":101,"Numpad 6":102,"Numpad 7":103,"Numpad 8":104,"Numpad 9":105,"Num Lock":144,"Scroll Lock":145,"colon_2":186};
+
+	 	var e = event || window.event;
+	    var typedChar = String.fromCharCode(e.charCode || e.keyCode);
+	    if(keyCodeToChar[e.which || e.keyCode]){
+	    	if(e.which==9||e.keyCode==9){
+	    		$('#'+element.id+"PopupClose").click();
+	    	}
+	    	return true;
+	    }
+	    else{
+	    	event.preventDefault();
+	    	return false;
+	    }
+}
+function initDateAndTimeFields(dateFormat, timeFormat){
+	initTimeField(timeFormat);
+	calendarDateRender(dateFormat, "jsCalendar");
+	calendarDateRender(dateFormat, "jsCalendarFutureOnly");
+	calendarDateRender(dateFormat, "jsCalendarPastOnly");
+}
+
+function getLicenseInfo(id, licence, operation)
+{
+	if (operation=="show"){
+		$('#'+id+'_show').hide();
+        $('#'+id+'_hide').show();
+        $.ajax({
+				type: "GET",
+				url: licence,
+				dataType: "json",
+				// post the whole form:
+				success: function(jsonResponse) {
+					$('#div_'+id).html(jsonResponse.displayValue);
+				},
+				error: function() {
+					$('#div_'+id).html("<br>"+"<b><font color='red'>Failed to retrieve license data</font></b>"+"<br><br>");
+				}
+			});
+	}
+	else{
+		$('#'+id+'_show').show();
+        $('#'+id+'_hide').hide();
+		$('#div_'+id).html("");
+	}
+}
+/** * */
+
+// click on more function
+function clickOnMore() {
+     var url = encodeURI(window.location.href + "&isInNewWindow=true");
+     var w = window.open(url);
+     return false;
+}
+
+//http://stackoverflow.com/questions/979256/sorting-an-array-of-javascript-objects/979325#979325
+// sort function on the entity type short field
+// reverse = false (1) means ascending order
+// the result is same as Java a.compareTo(b) in ascending order --
+// a < b results in -1 : reverse * ((a > b) - (b > a)) = 1 * (false - true) = -1
+// a = b results in 0 : reverse * ((a > b) - (b > a)) = 1 * (false - false) = 0
+// a > b results in 1 : reverse * ((a > b) - (b > a)) = 1 * (true - false) = 1
+
+function sortByField(field, reverse, primer){
+
+     var key = primer ?
+                   function(x) {return padLeading0(primer(x[field]))} :
+                   function(x) {return padLeading0(x[field])};
+
+     var key2 = primer ?
+                   function(x) {return padLeading0(primer(x))} :
+                   function(x) {return padLeading0(x)};
+
+     reverse = !reverse ? 1 : -1;
+
+     return function (a, b) {
+          var secondField = "";
+          if (field == "repVolume") {
+	       secondField = "repIssue";
+	  } else if (field == "repIssue") {
+	       secondField = "repVolume";
+	  }
+	  if ("" != secondField) {
+	       c = a[secondField] == null ? "" : key2(a[secondField]);
+	       d = b[secondField] == null ? "" : key2(b[secondField]);
+	       return a = key(a), b = key(b), (reverse * ((a > b) - (b > a)) == 0) ? reverse * ((c > d) - (d > c)) : reverse * ((a > b) - (b > a));
+	  } else {
+               return a = key(a), b = key(b),  reverse * ((a > b) - (b > a));
+	  }
+     }
+}
+
+function padLeading0(str) {
+	//console.log(str);
+	var newStr = "";
+	try {
+		var i = 0;
+		var pattern = /([^\d]*)([\d]+)/g;
+		var match = pattern.exec(str);
+		if (match == null) {
+			return str;
+		}
+		// in case of last matching numeral does not consume the whole source string, this indx help extract the rest of the string
+		var indx = 0;
+		while (match != null) {
+			newStr += match[1];
+		    newStr += ("0000000000" + match[2]).slice(-10);
+		    indx += match[1].length + match[2].length;
+		    match = pattern.exec(str);
+		}
+		if (indx.length < str.length) {
+			newStr += str.substr(indx + 1, str.length - indx);
+		}
+	} catch (err) {
+		// when failed return the current string
+		newStr = str;
+	}
+	//console.log(newStr);
+	return newStr;
+}
+
+
+// function to display list of digital representation with possible sort
+// dropdown option
+
+ function writeRepData (data, sortBy, filter, noOfRepToBeDisplayed, maxRepDisplay, displayViewItLongForm, viewersList) {
+	data.sort(sortByField(sortBy, false, function(a){return a==null? "" : a.toUpperCase()}));
+	var repData = $("#repData");
+
+	$(repData).html("");
+	if (displayViewItLongForm) {
+		$(repData).append("<br/><br/>");
+	}
+	var repCnt = 0;
+
+	var findSearchInField = $("#findFieldSelection").val();
+	var viewersMap = {};
+	for (repCnt = 0; repCnt < noOfRepToBeDisplayed && repCnt < data.length; repCnt++) {
+		var item = data[repCnt];
+		// if there is a search text, continue if not match
+		// use the find search in field as sort by if it exists to filter out data
+		if (filter != null) {
+			if (typeof findSearchInField == 'undefined' || null === findSearchInField || "" === findSearchInField || "null" === findSearchInField) {
+				// use the original sort by if there is no find in field
+				if (sortBy == null || item[sortBy] == null || (item[sortBy].toUpperCase()).indexOf(filter.toUpperCase()) == -1) {
+					continue;
+				}
+			} else if (item[findSearchInField] == null || (item[findSearchInField].toUpperCase()).indexOf(filter.toUpperCase()) == -1) {
+				continue;
+			}
+			matchCount++;
+		}
+		if (typeof viewersMap[item.serviceCode] !== 'undefined'){
+			viewersMap[item.serviceCode].push(item);
+		} else {
+			viewersMap[item.serviceCode] =  [item];
+		}
+	}
+	repDisplay = "";
+//	if (viewersMap.has('AlmaViewer')){
+//		repDisplay += viewersMap.get('AlmaViewer')[0].serviceDescription;
+//		for (i = 0; i < viewersMap.get('AlmaViewer').length; i++) {
+//			if (viewersMap.get('AlmaViewer')[i].repType == 'REPRESENTATION') {
+//				repDisplay += writeService(viewersMap.get('AlmaViewer')[i], true);
+//			} else if (viewersMap.get('AlmaViewer')[i].repType == 'REMOTE_REPRESENTATION') {
+//				repDisplay += writeRemote(viewersMap.get('AlmaViewer')[i]);
+//			}
+//		}
+//		repDisplay += "<br/>";
+//	}
+//	if (viewersMap.has('UniversalViewer')){
+//		repDisplay += viewersMap.get('UniversalViewer')[0].serviceDescription;
+//		for (i = 0; i < viewersMap.get('UniversalViewer').length; i++) {
+//			repDisplay += writeService(viewersMap.get('UniversalViewer')[i], false);
+//		}
+//		repDisplay += "<br/>";
+//	}
+	if (viewersList==null){
+		viewersList = Object.keys(viewersMap);
+	}	
+	for (var k = 0; k < viewersList.length; k++) {
+//		if (key == 'AlmaViewer' || key == 'UniversalViewer'){
+//			continue;
+//		}
+		if (!viewersMap[viewersList[k]]){
+				continue;
+		}
+
+		repDisplay += viewersMap[viewersList[k]][0].serviceDescription;
+		for (i = 0; i < viewersMap[viewersList[k]].length; i++) {
+			if (viewersList[k]=='AlmaViewer'&&viewersMap[viewersList[k]][i].repType == 'REMOTE_REPRESENTATION'){
+				repDisplay += writeRemote(viewersMap[viewersList[k]][i]);
+			}
+			else{
+			repDisplay += writeService(viewersMap[viewersList[k]][i], false);
+			}
+		}
+		repDisplay += "<br/>";
+	}
+    $(repData).append(repDisplay);
+	if (maxRepDisplay < data.length && !displayViewItLongForm) {
+		repDisplay = "";
+		repDisplay += "<div>";
+		repDisplay += "<a target=\"_blank\" href=\"#\" onclick=\"return clickOnMore()\">" + MORE_REPRESENTATION + "</a>";
+		repDisplay += "</div>";
+		$(repData).append(repDisplay);
+	}
+
+	// check access rights for remote digital representation
+
+	$("#repData > li.remoterep.hasAR > a").each(function(i) {
+		$.ajax( $(this).attr("href"), { type: "HEAD", timeout: 5000, context: { obj: this }})
+		.done(function(data, status, ajax) {
+			$(this.obj).parent().find('.publicNoteSpinner').removeClass("publicNoteSpinner");
+		})
+		.fail(function(ajax, status, err) {
+			var myParent = $(this.obj).parent();
+			if (err == 'Forbidden') {
+				linkText = $(this.obj).text();
+				// replace link to span
+				$(myParent).append("<span>" + linkText + "</span> ");
+				errMsg = ajax.getResponseHeader('X-Denied-Message');
+				if (errMsg == "null" || errMsg == "") {
+					errMsg= STANDARD_DENIED_NOTE;
+				}
+				if ($(myParent).find('.publicNote')) {
+					$(myParent).find('.publicNote').remove();
+					$(myParent).append("<div class=\"publicNoteRestricted\">" + errMsg + "</div> ")
+				}
+				// remove the $(this.obj) element that points to <a>, we do it last because it can change the parent relationship
+				$(myParent).find('.representation-link.digital-direct-link').remove();
+			}
+			else if (err == 'Unauthorized') {
+				errMsg = ajax.getResponseHeader('X-Denied-Message');
+				if (errMsg != "null" && errMsg != "") {
+					if ($(myParent).find('.publicNote')) {
+						$(myParent).find('.publicNote').remove();
+						$(myParent).append("<div class=\"publicNote\">" + errMsg + "</div> ")
+					}
+				}
+			}
+			$(myParent).find('.publicNoteSpinner').removeClass("publicNoteSpinner");
+
+		});
+	})
+}
+
+function writeService(item, isAlmaViewer) {
+
+	var servicesDisplay = "";
+	servicesDisplay += "<li>&nbsp;&nbsp;"
+	if (item.repLabel != null) {
+		servicesDisplay += item.repLabel + " ";
+	}
+	if (item.repLegacy == 'true' && item.repArChecker == 'true') {
+		servicesDisplay += "<a context-service=\"" + item.contextServiceId+"\" target=\"_blank\" href=\"" + item.repUrl + "\" class=\"representation-link digital-direct-link\"> ";
+	} else if (item.repLegacy == 'false' && item.repArChecker == 'true') {
+		if (isAlmaViewer) {
+			servicesDisplay += "<a context-service=\"" + item.contextServiceId+"\" target=\"_blank\" href=\"" + item.repUrl + "\" class=\"representation-link digital-lightbox\"> ";
+		} else {
+			servicesDisplay += "<a context-service=\"" + item.contextServiceId+"\" target=\"_blank\" href=\"" + item.repUrl + "\" class=\"digital-lightbox\"> ";
+		}
+	}
+	servicesDisplay += item.repNumFile + "&nbsp;" + REP_FILES + " ";
+	if (item.repNumFile != 0) {
+		if (item.repFileType != null) {
+			servicesDisplay += "(" + item.repFileType + ")";
+		} else {
+			servicesDisplay += "(" + MIX_CONTENTS +") ";
+		}
+	}
+	if (item.repArChecker == 'true') {
+		servicesDisplay += "</a> ";
+	}
+	// use the div not the li inside another li without ul
+	if (item.repPublicNote != null) {
+		if (item.repArChecker == 'true') {
+			servicesDisplay += "<div class=\"publicNote\">" + item.repPublicNote + "</div> ";
+		} else {
+			servicesDisplay += "<div class=\"publicNoteRestricted\">" + item.repPublicNote + "</div> ";
+		}
+	}
+	servicesDisplay += "</li> ";
+	return servicesDisplay;
+}
+
+function writeRemote(item) {
+
+	var servicesDisplay = "";
+	if (item.checkAccessRights == 'true') {
+		// mark the list of the remote repositories that need to check access rights for sending head request
+		// to the remote repositories
+		servicesDisplay += "<li class=\"remoterep hasAR\">&nbsp;&nbsp;";
+	} else {
+		servicesDisplay += "<li>&nbsp;&nbsp;"
+	}
+	console.log(servicesDisplay);
+
+	if (item.repLabel != null) {
+		servicesDisplay += item.repLabel + "&nbsp;" + REMOTE_REP_AVAILABILITY + "</span> ";
+	} else {
+		servicesDisplay += REMOTE_REP_AVAILABILITY + "</span> ";
+	}
+	if (item.repRepositoryName != null) {
+		servicesDisplay += "<a context-service=\"" + item.contextServiceId+"\" target=\"_blank\" href=\"" + item.repUrl + "\" class=\"representation-link digital-direct-link\">" + item.repRepositoryName + "</a> ";
+	} else {
+		servicesDisplay += "<a context-service=\"" + item.contextServiceId+"\" target=\"_blank\" href=\"" + item.repUrl + "\" class=\"representation-link digital-direct-link\">" + ALTERNATIVE_FORMAT + "</a>";
+	}
+	// use the div not the li inside another li without ul
+	if (item.repPublicNote != null) {
+		if (item.checkAccessRights == 'true') {
+			servicesDisplay += "<div class=\"publicNote publicNoteSpinner\">" + item.repPublicNote + "</div> ";
+		}
+		else{
+			servicesDisplay += "<div class=\"publicNote\">" + item.repPublicNote + "</div> ";
+		}
+	}
+	servicesDisplay += "</li> ";
+	return servicesDisplay;
+}
+
+
+function writeMmsMetadata(mmsMetadata) {
+    var repData = $("#mmsMetadata");
+    $(repData).html("");
+    $(repData).append("<br/>");
+    var tmpData = "";
+    var repDisplay = "";
+    repDisplay += "<div class=\" recordContent \">";
+    repDisplay += "<div class=\"width8  alignField  singleThumbnailContainer    \">";
+    repDisplay += mmsMetadata["mmsThumbnail"] + "</div>";
+    repDisplay += "<div class=\" alignField \">";
+    repDisplay += "<div class=\" alignField recordTitle\" >";
+    repDisplay += "<span class=\"spacer_after_1em\">&nbsp;" + mmsMetadata["mmsTitle"] + "</span></div>";
+    repDisplay += "<div class=\" alignField recordTitle\" >";
+    tmpData = (mmsMetadata["mmsAuthor"] == null) ? "": mmsMetadata["mmsAuthor"];
+    repDisplay += "<span class=\"spacer_after_1em\">&nbsp;" + tmpData + "</span></div>";
+    repDisplay += "<div class=\"alignField recordTitle\" >";
+    tmpData = (mmsMetadata["mmsPublisher"] == null) ? "": mmsMetadata["mmsPublisher"];
+    tmpData += (mmsMetadata["mmsPublishDate"] == null) ? "" : mmsMetadata["mmsPublishDate"];
+    repDisplay += "<div class=\"recordTitle\" >";
+    repDisplay += "<span class=\"spacer_after_1em\">&nbsp;" + tmpData+ "</span></div>";
+    repDisplay += "</div>";
+    repDisplay += "</div>";
+    $(repData).append(repDisplay);
+}
+
+// get a list of sort field to be displayed in the sort and find dropdown for an entity type
+
+function retrieveSortFieldsFromEntityType(entityType, sortfieldList) {
+    var sortFieldsForEntityType = ALL_SORT_FIELDS[entityType];
+    for (var i = 0; i < sortFieldsForEntityType.length; i++) {
+    	// only add once
+    	var sortField = sortFieldsForEntityType[i];
+    	if (sortfieldList.indexOf(sortField) == -1) {
+    		sortfieldList.push(sortField);
+    	}
+    }
+}
+
+// get a list of sort field to be displayed in the sort and find dropdown for
+// current representation's entity type
+
+
+function retrieveSortFieldsFromRepInfo(repInfo, sortFieldList) {
+    // current entity type and sort field list for display sort field and find drop down per entity type
+    var entityTypeList = [];
+    for (var i = 0; i < repInfo.length; i++) {
+    	var item = repInfo[i];
+    	// only retrieve the sort fields once per entity type
+    	if ((item.repEntityType != null) && (entityTypeList.indexOf(item.repEntityType) == -1)) {
+    		entityTypeList.push(item.repEntityType);
+	}
+    }
+    // only display sort and search control for a single entity type
+    if (entityTypeList.length > 0 && entityTypeList.length == 1) {
+    	retrieveSortFieldsFromEntityType(entityTypeList[0], sortFieldList);
+    }
+}
+
+
+
+function buildRepMessage(type, text) {
+    var msg = "<div class=\"typeC2 repViewItNoBorder\"  id=\"" + type + "\">";
+    msg += "<div class=\"typeM\" style=\"border:none\" ><ul>"
+    msg += "<li class=\"" + type + "\"><span>" + text + "</span></li></ul>";
+    msg += "</div>";
+    msg += "</div>";
+    return msg;
+}
+
+function saveSearchText(evt, obj) {
+	evt.stopPropagation();
+	evt.preventDefault();
+	searchTextForRep = obj.value;
+	return false;
+}
+
+// perform a find option
+function writeFindRepData() {
+    var item = document.getElementById("screenMsgContainer");
+    $(item).empty();
+    if ("" == searchTextForRep) {
+	     $(item).append($(buildRepMessage("info", ENTER_SEARCH_TERM_MSG)));
+         return false;
+    }
+    var sortBy = $("#findFieldSelection").val();
+    if (typeof sortBy == 'undefined' || null === sortBy || "" === sortBy || "null" === sortBy) {
+    	$(item).append($(buildRepMessage("info", ENTER_ET_OPTION_MSG)));
+		return false;
+	}
+    console.log("sorting by: " +  sortBy + " search Text: " +  searchTextForRep);
+    writeRepData (repInfo, sortBy, searchTextForRep, repInfo.length, maxRepDisplay, true,null);
+    if (matchCount == 0) {
+    	$(item).append($(buildRepMessage("info", RESULT_NO_MATCH_MSG)));
+    }
+    // ready for another search
+    matchCount = 0;
+    return false;
+}
+
+// perform a sort option
+
+function writeSortRepData() {
+    var item = document.getElementById("screenMsgContainer");
+    $(item).empty();
+    var sortBy = $("#sortFieldSelection").val();
+    console.log("sorting by: " +  sortBy);
+    if (typeof sortBy == 'undefined' || null === sortBy || "" === sortBy || "null" === sortBy) {
+    	$(item).append($(buildUploaderMessage("info", ENTER_ET_OPTION_MSG)));
+		return false;
+	}
+    // Need to consider if the search text has been chosen as filter
+    if ("" == searchTextForRep) {
+        writeRepData (repInfo, sortBy, null, repInfo.length, maxRepDisplay, true,null);
+    } else {
+        writeRepData (repInfo, sortBy, searchTextForRep, repInfo.length, maxRepDisplay, true,null);
+    }
+}
+
+function clearSortFindControl() {
+	$("#sortFieldSelection").val("null");
+	$("#findFieldSelection").val("null");
+	searchTextForRep = "";
+	$('#searchText').val('');
+	// also clear error message
+    var item = document.getElementById("screenMsgContainer");
+    $(item).empty();
+	writeRepData (repInfo, "repLabel", null, repInfo.length, maxRepDisplay, true,null);
+	return false;
+}
+
+
+// build sort control
+function buildSortListControl(sortFieldList) {
+    var repDisplay = "<div class=\"alignField repViewItNoBorder\">";
+    repDisplay += "<ul class=\"clearfix mainActions\">";
+    repDisplay += "<li class=\"boxName clearfix\"><label for=\"sortFieldSelection\">" + SORT_RESULTS_BY_LABEL + "&nbsp;&nbsp;</label></li>";
+    repDisplay += "<li class=\"hideActions clearfix box hideRadio\">";
+    repDisplay += "<select id=\"sortFieldSelection\" onChange=\"writeSortRepData();\">";
+    // display empty when first load the page
+    repDisplay += "<option value=\"null\"></option>";
+    for (var i = 0; i < sortFieldList.length; i++) {
+        repDisplay += "<option value=\"" + sortFieldList[i] +"\">" + repSortableFieldMap[sortFieldList[i]] + "</option>";
+    }
+    repDisplay += "</select>";
+    repDisplay += "</li>";
+    repDisplay += "</ul>";
+    repDisplay += "</div>";
+    return repDisplay;
+}
+
+
+// build find control
+function buildFindListControl(sortFieldList) {
+    var repDisplay = "<div class=\"alignField repViewItNoBorder repViewItLeftMargin\" >";
+    repDisplay += "<ul class=\"clearfix mainActions\">";
+    repDisplay += "<li class=\"boxName clearfix\"><label for=\"searchText\">" + FIND_LABEL + "&nbsp;&nbsp;</label></li>";
+    repDisplay += "<li><input type=\"text\" maxlength=\"1000\" id=\"searchText\" class\=\"jsDummy \" onkeydown=\"if (event.keyCode == 13) {saveSearchText(event, this); return false;}\" onchange=\"saveSearchText(event, this)\"></li>";
+    repDisplay += "<li class=\"boxName clearfix\"><label for=\"findFieldSelection\">" + IN_LABEL + "&nbsp;&nbsp;</label></li>";
+    repDisplay += "<li class=\"hideActions clearfix box hideRadio\">";
+    repDisplay += "<select id=\"findFieldSelection\">";
+    // display empty when first load the page
+    repDisplay += "<option value=\"null\"></option>";
+    for (var i = 0; i < sortFieldList.length; i++) {
+        repDisplay += "<option value=\"" + sortFieldList[i] +"\">" + repSortableFieldMap[sortFieldList[i]] + "</option>";
+    }
+    repDisplay += "</select>";
+    repDisplay += "<li class=\"hideActions clearfix box hideRadio\">";
+    repDisplay += "<div id=\"goButton\" class=\"buttonAction roundLeft roundRight spacer_after_1em\">";
+    repDisplay += "<input type=\"submit\" id=\"findRep\" class=\"button\" value=\"" + GO_LABEL + "\" onClick=\" return writeFindRepData();\" >";
+    repDisplay += "</li>";
+    repDisplay += "<li class=\"hideActions clearfix box hideRadio\">";
+    repDisplay += "<div id=\"clearButton\" class=\"buttonAction roundLeft roundRight spacer_after_1em\">";
+    repDisplay += "<input type=\"submit\" id=\"clearRep\" class=\"button\" value=\"" + CLEAR_LABEL + "\" onClick=\" return clearSortFindControl();\" >";
+    repDisplay += "</li>";
+    repDisplay += "</ul>";
+    repDisplay += "</div>";
+    return repDisplay;
+}
+
+function buildDateCombo(dateList) {
+    var repDisplay = "<div class=\"alignField repViewItNoBorder\">";
+    repDisplay += "<ul class=\"clearfix mainActions\">";
+    repDisplay += "<li class=\"boxName clearfix\"><label for=\"sortDateSelection\">" + DATE_LABEL + "&nbsp;&nbsp;</label></li>";
+    repDisplay += "<li class=\"hideActions clearfix box hideRadio\">";
+    repDisplay += "<select id=\"sortDateSelection\" onChange=\"getDate();\">";
+    // display default when first load the page
+    repDisplay += "<option value=\"ALL\">" + ALL_LABEL + "</option>";
+    for (var i = 0; i < dateList.length; i++) {
+        repDisplay += "<option value=\"" + dateList[i] +"\">" + dateList[i] + "</option>";
+    }
+    repDisplay += "</select>";
+    repDisplay += "</li>";
+    repDisplay += "</ul>";
+    repDisplay += "</div>";
+    return repDisplay;
+}
+
+function buildVolumeCombo(volumeList) {
+    var repDisplay = "<div class=\"alignField repViewItNoBorder\">";
+    repDisplay += "<ul class=\"clearfix mainActions\">";
+    repDisplay += "<li class=\"boxName clearfix\"><label for=\"sortVolumeSelection\">" + VOLUME_LABEL + "&nbsp;&nbsp;</label></li>";
+    repDisplay += "<li class=\"hideActions clearfix box hideRadio\">";
+    repDisplay += "<select id=\"sortVolumeSelection\" onChange=\"getVolume();\">";
+    // display default when first load the page
+    repDisplay += "<option value=\"ALL\">" + ALL_LABEL + "</option>";
+    for (var i = 0; i < volumeList.length; i++) {
+        repDisplay += "<option value=\"" + volumeList[i] +"\">" + volumeList[i] + "</option>";
+    }
+    repDisplay += "</select>";
+    repDisplay += "</li>";
+    repDisplay += "</ul>";
+    repDisplay += "</div>";
+    return repDisplay;
+
+}
+
+function buildYearCombo(yearList) {
+    var repDisplay = "<div class=\"alignField repViewItNoBorder\">";
+    repDisplay += "<ul class=\"clearfix mainActions\">";
+    repDisplay += "<li class=\"boxName clearfix\"><label for=\"sortYearSelection\">" + YEAR_LABEL + "&nbsp;&nbsp;</label></li>";
+    repDisplay += "<li class=\"hideActions clearfix box hideRadio\">";
+    repDisplay += "<select id=\"sortYearSelection\" onChange=\"getYear();\">";
+    // display default when first load the page
+    repDisplay += "<option value=\"ALL\">" + ALL_LABEL + "</option>";
+    for (var i = 0; i < yearList.length; i++) {
+        repDisplay += "<option value=\"" + yearList[i] +"\">" + yearList[i] + "</option>";
+    }
+    repDisplay += "</select>";
+    repDisplay += "</li>";
+    repDisplay += "</ul>";
+    repDisplay += "</div>";
+    return repDisplay;
+
+}
+
+function buildVolumeDateCombo(repInfo, repControl, volumeFilter, dateFilter) {
+	var curRepData = repInfo;
+	var volumeList = [];
+	var dateList = [];
+	var repList = [];
+    for (var i = 0; i < curRepData.length; i++) {
+    	var item = curRepData[i];
+    	// pick volume and date only once
+    	if ((("ALL" == volumeFilter) || (item.repVolume != null && volumeFilter == item.repVolume)) &&
+    		(("ALL" == dateFilter) || (item.repDate != null && dateFilter == item.repDate))) {
+    		repList.push(item);
+    	}
+    }
+    // sort by date so we can have a list of year in the natural order in the dropdown
+	repList.sort(sortByField("repDate", false, function(a){return a==null? "" : a.toUpperCase()}));
+	for (var i = 0; i < repList.length; i++) {
+		if (repList[i].repDate != null && dateList.indexOf(repList[i].repDate) == -1) {
+			dateList.push(repList[i].repDate);
+		}
+	}
+	repControl.append(buildDateCombo(dateList));
+	// sort by volume so we can have a list of year in the natural order in the dropdown
+	repList.sort(sortByField("repVolume", false, function(a){return a==null? "" : a.toUpperCase()}));
+	for (var i = 0; i < repList.length; i++) {
+		if (repList[i].repVolume != null && volumeList.indexOf(repList[i].repVolume) == -1) {
+			volumeList.push(repList[i].repVolume);
+		}
+	}
+	repControl.append(buildVolumeCombo(volumeList));
+	$("#sortDateSelection").val(dateFilter);
+	$("#sortVolumeSelection").val(volumeFilter);
+	// write out in label order
+	if (repList.length > 0) {
+		writeRepData (repList, "repLabel", null, repList.length, repList.length, true,null);
+	}
+}
+
+function buildVolumeYearCombo(repInfo, repControl, volumeFilter, yearFilter) {
+	var curRepData = repInfo;
+	var volumeList = [];
+	var yearList = [];
+	var repList = [];
+    for (var i = 0; i < curRepData.length; i++) {
+    	var item = curRepData[i];
+    	// pick volume and date only once
+    	if ((("ALL" == volumeFilter) || (item.repVolume != null && volumeFilter == item.repVolume)) &&
+    		(("ALL" == yearFilter) || (item.repYear != null && yearFilter == item.repYear))) {
+    		repList.push(item);
+    	}
+    }
+    // sort by year so we can have a list of year in the natural order in the dropdown
+	repList.sort(sortByField("repYear", false, function(a){return a==null? "" : a.toUpperCase()}));
+	for (var i = 0; i < repList.length; i++) {
+		if (repList[i].repYear != null && yearList.indexOf(repList[i].repYear) == -1) {
+			yearList.push(repList[i].repYear);
+		}
+	}
+	repControl.append(buildYearCombo(yearList));
+	// sort by volume so we can have a list of year in the natural order in the dropdown
+	repList.sort(sortByField("repVolume", false, function(a){return a==null? "" : a.toUpperCase()}));
+	for (var i = 0; i < repList.length; i++) {
+		if (repList[i].repVolume != null && volumeList.indexOf(repList[i].repVolume) == -1) {
+			volumeList.push(repList[i].repVolume);
+		}
+	}
+	repControl.append(buildVolumeCombo(volumeList));
+	$("#sortYearSelection").val(yearFilter);
+	$("#sortVolumeSelection").val(volumeFilter);
+	// write the list out sorted by label
+	if (repList.length > 0) {
+		writeRepData (repList, "repLabel", null, repList.length, repList.length, true,null);
+	}
+}
+
+function getDate() {
+	var curDate = $("#sortDateSelection").val();
+	var curVolume = $("#sortVolumeSelection").val();
+    var repControls = $("#repControls");
+    $(repControls).html("");
+    $(repControls).append("<br/>");
+    buildVolumeDateCombo(repInfo, $(repControls), curVolume, curDate);
+	return false;
+}
+
+function getEntityType(repInfo) {
+	// get the first non null entity type
+	for (var i = 0; i < repInfo.length; i++) {
+		if (repInfo[i].repEntityType != null) {
+			return repInfo[i].repEntityType;
+		}
+	}
+	return "";
+}
+
+function getVolume() {
+	var curDate = $("#sortDateSelection").val();
+	var curVolume = $("#sortVolumeSelection").val();
+	var curYear = $("#sortYearSelection").val();
+    var repControls = $("#repControls");
+    $(repControls).html("");
+    $(repControls).append("<br/>");
+    var entityType = getEntityType(repInfo);
+    if ("ISSUE" == entityType) {
+ 	   buildVolumeDateCombo(repInfo, $(repControls), curVolume, curDate);
+    } else if ("IssueDet" == entityType) {
+        buildVolumeYearCombo(repInfo, $(repControls), curVolume, curYear);
+    }
+	return false;
+}
+
+function getYear() {
+	var curYear = $("#sortYearSelection").val();
+	var curVolume = $("#sortVolumeSelection").val();
+    var repControls = $("#repControls");
+    $(repControls).html("");
+    $(repControls).append("<br/>");
+    buildVolumeYearCombo(repInfo, $(repControls), curVolume, curYear);
+	return false;
+}
+
+// Display the repsentation controls -- sort and find dropdown with sortable fields from the corresponding entity type
+
+function writeRepControls(repInfo, repSortableFieldMap) {
+    var sortFieldList = [];
+    retrieveSortFieldsFromRepInfo(repInfo, sortFieldList);
+    if (sortFieldList.length > 0) {
+       var repControls = $("#repControls");
+       $(repControls).html("");
+       $(repControls).append("<br/>");
+       var entityType = getEntityType(repInfo);
+       if ("ISSUE" == entityType) {
+    	   buildVolumeDateCombo(repInfo, $(repControls), "ALL", "ALL");
+       } else if ("IssueDet" == entityType) {
+    	    buildVolumeYearCombo(repInfo, $(repControls), "ALL", "ALL");
+       } else {
+    	   $(repControls).append(buildSortListControl(sortFieldList));
+    	   $(repControls).append(buildFindListControl(sortFieldList));
+       }
+    }
+}
+
+function hideCitationSection(type) {
+	var eles = [];
+	var oppositePrefix = "Book";
+	if (type=='Book') {
+		oppositePrefix='Article';
+	}
+
+	var liElements = document.getElementsByTagName("li");
+	for(var i = 0; i < liElements.length; i++) {
+	    if(liElements[i] !='undefined' && liElements[i].id!='undefined' && liElements[i].id.length >0) {
+
+	    	if (liElements[i].id.indexOf(type) == 0) {
+	    		liElements[i].style.display = "none";
+	    	}else if (liElements[i].id.indexOf(oppositePrefix) == 0 && liElements[i].id.indexOf("_NONE")==-1){
+	    		liElements[i].style.display = "";
+	    	}
+	    }
+    }
+
+	var inputs = document.getElementsByTagName("input");
+	for(var i = 0; i < inputs.length; i++) {
+	    if(inputs[i] !='undefined' && inputs[i].id!='undefined' && inputs[i].id.length >0) {
+
+	    	if (inputs[i].id.indexOf(type) == 0) {
+	    		inputs[i].style.display = "none";
+	    		inputs[i].disabled="disabled";
+	    	}else if (inputs[i].id.indexOf(oppositePrefix) == 0){
+	    		if (inputs[i].id.indexOf("_NONE")==-1) {
+	    			inputs[i].style.display = "";
+	    		}
+	    		inputs[i].disabled="";
+	    	}
+	    }
+    }
+}
+
+function getThumbnailImage(response) {
+
+	for (var key in response) {
+		var url=response[key].thumbnail_url;
+		if (url != null && url != 'undefined'){
+			//alert(response[key].thumbnail_url);
+			var imgFields = document.getElementsByName(key);
+			for (var i = 0; i < imgFields.length; i++) {
+				imgFields[i].src=url;
+			}
+
+		}
+	}
+}
+
+function setMetadataChanged() {
+	document.getElementById('metadataChanged').value = 'true';
+}
+
+function setResourceInformationHeaderInd() {
+	document.getElementById('resourceInformationHeaderInd').value = 'true';
+}
+
+function setDeliveryInformationHeaderInd() {
+	document.getElementById('deliveryInformationHeaderInd').value = 'true';
+}
+
+
+function handleAllowOtherLibraryChange () {
+	if (document.getElementById('_allowOtherLibrary').checked) {
+		document.getElementById('_allowOtherLibrary').value = 'true';
+	}else {
+		document.getElementById('_allowOtherLibrary').value = 'false';
+	}
+}
+
+function calcPickupLibrary (){
+	var $data = $("form[name='uResolverRequestForm']").clone();
+	$data.find("input[name='submitOperation']").remove();
+	var ajaxPreferedInstitution = document.getElementById('preferredPickupInstitutionInput').value;
+
+	var formatStr = "&format=";
+
+	if (document.getElementsByName('format')[0].checked) {
+		formatStr= formatStr + 'PHYSICAL';
+	}else if (document.getElementsByName('format')[1].checked) {
+		formatStr= formatStr + 'DIGITAL';
+	}else {
+		formatStr= formatStr + 'PHYSICAL_NON_RETURNABLE';
+	}
+
+	$.ajax({
+		type : "POST",
+		url : $data.attr("action"),
+		dataType : "html",
+		data: $data.add().serialize() + "&submitOperation=openRequest&ajaxPreferedInstitution=" + ajaxPreferedInstitution+formatStr,
+		success : function(xmlResponse) {
+			renderILLAjaxFields(xmlResponse);
+
+		}
+	});
+}
+
+function renderILLAjaxFields(xmlResponse) {
+	$(xmlResponse).each(function(){
+		if (this.nodeName.indexOf('LI')>-1) {
+		$('#'+this.id).replaceWith(this).show();
+	  }
+	});
+}
+
+/** *************************************************************** */
+

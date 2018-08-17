@@ -1,0 +1,263 @@
+
+<!-- saved from url=(0484)https://northeastern.userservices.exlibrisgroup.com/view/uresolver/01NEU_INST/openurl?ctx_enc=info:ofi/enc:UTF-8&ctx_id=10_1&ctx_tim=2018-04-25T22%253A40%253A53IST&ctx_ver=Z39.88-2004&url_ctx_fmt=info:ofi/fmt:kev:mtx:ctx&url_ver=Z39.88-2004&rfr_id=info:sid/primo.exlibrisgroup.com-NEU_ALMA&req_id=254201822404822577042405007970210&rft_dat=ie=01NEU_INST:51266520600001401,language=eng,view=NU&svc_dat=viewit&u.ignore_date_coverage=true&req.skin=nu-nui&is_new_ui=true&Force_direct=false -->
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- DEBUG:
+<li>http://northeastern.userservices.exlibrisgroup.com/view/uresolver/01NEU_INST/openurl?svc_dat=CTO&debug=true&debug=true&ctx_enc=info:ofi/enc:UTF-8&ctx_id=10_1&ctx_tim=2018-04-25T22%253A40%253A53IST&ctx_ver=Z39.88-2004&url_ctx_fmt=info:ofi/fmt:kev:mtx:ctx&url_ver=Z39.88-2004&rfr_id=info:sid/primo.exlibrisgroup.com-NEU_ALMA&req_id=254201822404822577042405007970210&rft_dat=ie=01NEU_INST:51266520600001401,language=eng,view=NU&svc_dat=viewit&u.ignore_date_coverage=true&req.skin=nu-nui&is_new_ui=true&Force_direct=false</li>
+
+END DEBUG--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+ 	<title>Home</title>
+
+	<link href="./otb_mashup_new.css" rel="stylesheet" type="text/css">
+				<link href="./mashup_new.css" rel="stylesheet" type="text/css">
+				<script language="javascript" type="text/javascript" src="./iframe-resizer.js.download"></script>
+			<script type="text/javascript" src="./jquery-mashup.js.download"></script>
+	<script language="javascript" type="text/javascript" src="./uresolverScripts.js.download"></script>
+	<script type="text/javascript" src="./jquery.js.download"></script>
+
+	<script>
+		var usePopUp = false;
+
+		function receiveMessage(event) {
+			var isInIFrame = (window.location != window.parent.location) ? true : false;
+			if (event.data.command == 'setflag' && isInIFrame)
+				usePopUp = true;
+		}
+
+		$(document).ready(function() {
+			$(".representation-link").click(function(){
+				if (COUNT_REP_SVC_LINK_RESOLVER){
+			        var package_service_id = $(this).attr('context-service');
+			        var url = "/view/action/uresolver.do?operation=resolveService&package_service_id=" + package_service_id + "&institutionId=" + INSTITUTION_ID + "&customerId=" + CUSTOMER_ID;
+					$.ajax({
+							type : "GET",
+						    url : url,
+						    dataType : "html",
+					});
+				}
+			});
+			$('a.digital-lightbox').click(function(e){
+				e.preventDefault();
+
+				// For the lightbox (URM-44958) we need complete URL (URM-52394)
+				// http://stackoverflow.com/questions/6941533/get-protocol-domain-and-port-from-url
+				//console.log ( "a.digital-lightbox has: " + $(this).attr('href') );
+				var completeUrl = window.location.href
+				var arr = completeUrl.split("/");
+				var currentUrl = arr[0] + "//" + arr[2]
+				var url = currentUrl + $(this).attr('href');
+				var hrefUrl = $(this).attr('href');
+				if(hrefUrl.substring(0,1) != "/"){
+					url = $(this).attr('href');
+				}
+				//console.log ( "Complete URL:" + url );
+
+				try {
+					if (usePopUp) {
+						parent.postMessage({"command": "popup", "url": url}, "*");
+					} else {
+						window.open(url);
+						return false;
+					}
+				}
+				catch(err) {
+					window.open(url);
+					return false;
+				}
+			}); // click
+			$('a.digital-direct-link').click(digitalNewWindow); // click
+
+			window.addEventListener("message", receiveMessage, false);
+			if (false) {
+				setTimeout(function() {
+					$('a.digital-lightbox').first().trigger('click');
+				}, 200);
+				$('a.digital-direct-link').first().trigger('click');
+			}
+			parent.postMessage({"command": "setflag"}, "*");
+		});
+
+		 function digitalNewWindow(e){
+				e.preventDefault();
+				var url = $(this).attr('href');
+				window.open(url);
+		 }
+	</script>
+
+</head>
+ <body>
+<form name="uResolverViewItForm" method="post" action="https://northeastern.userservices.exlibrisgroup.com/view/action/uresolverViewit.do"><div class="tabContent viewIt ">
+<!-- Placeholder for view it long form meta data and controls -->
+
+	<div id="repDataLong">
+		<div id="screenMsgContainer" class="repViewItNoBorder">
+
+		</div>
+
+		<div id="mmsMetadata">
+		</div>
+                <div id="repControls" class="typeJ repViewItNoBorder" "="">
+
+                </div>
+
+	</div>
+	<img style="display:none" alt="Invisible image" src="./apache_pb(4).gif"><!-- Only display the metadata for view it long form when view it displays in a new window -->
+	<!-- current representation info -->
+	<script>
+	    // sort field definition per entity type
+            var AUDIOVISUAL_SORT_FIELDS = ['repCreator', 'repTitle', 'repTrack', 'repStartTime', 'repEndTime'];
+            var ARTICLE_SORT_FIELDS = ['repAuthor', 'repTitle', 'repVolume', 'repIssue', 'repDate', 'repStartPage', 'repEndPage'];
+            var CHAPTER_SORT_FIELDS = ['repAuthor', 'repTitle', 'repNumber', 'repStartPage', 'repEndPage'];
+            var ISSUE_SORT_FIELDS = ['repVolume', 'repIssue', 'repDate'];
+            var ISSUE_DET_SORT_FIELDS = ['repVolume', 'repIssue', 'repNumber', 'repYear', 'repSeasonMonth', 'repDayInMonth'];
+            var ALL_SORT_FIELDS = {};
+            ALL_SORT_FIELDS["AUDIOVISUAL"] = AUDIOVISUAL_SORT_FIELDS;
+            ALL_SORT_FIELDS["ARTICLE"] = ARTICLE_SORT_FIELDS;
+            ALL_SORT_FIELDS["CHAPTER"] = CHAPTER_SORT_FIELDS;
+            ALL_SORT_FIELDS["ISSUE"] = ISSUE_SORT_FIELDS;
+            ALL_SORT_FIELDS["IssueDet"] = ISSUE_DET_SORT_FIELDS;
+	    var SORT_RESULTS_BY_LABEL = "Sort results by";
+            var FIND_LABEL = "Find";
+            var IN_LABEL = "in";
+            var GO_LABEL = "Go";
+            var ENTER_SEARCH_TERM_MSG = "Please enter a search term";
+            var ENTER_ET_OPTION_MSG = "Please select an entity type option";
+            var RESULT_NO_MATCH_MSG = "Your search result returns no match";
+            var ALL_LABEL = "ALL";
+            var CLEAR_LABEL = "Clear";
+            var DATE_LABEL = "Date";
+            var VOLUME_LABEL = "Volume";
+            var YEAR_LABEL = "Year";
+            var CUSTOMER_ID  = 1390;
+            var INSTITUTION_ID = 1401;
+            var COUNT_REP_SVC_LINK_RESOLVER  = false;
+
+
+
+	     var repInfo = [];
+	    </script>
+<!-- if no electronic & no digital available - show this -->
+	<ul>
+				<li>
+		                <span class="internalTitle">
+		            		Content available: </span>
+						<a target="_blank" href="https://northeastern.userservices.exlibrisgroup.com/view/action/uresolver.do?operation=resolveService&amp;package_service_id=8182382300001401&amp;institutionId=1401&amp;customerId=1390" title="external link: /view/action/uresolver.do?operation=resolveService&amp;package_service_id=8182382300001401&amp;institutionId=1401&amp;customerId=1390">Safari</a>
+						<a id="53266520580001401_show" style="margin-left:2%;" href="https://northeastern.userservices.exlibrisgroup.com/view/uresolver/01NEU_INST/openurl?ctx_enc=info:ofi/enc:UTF-8&amp;ctx_id=10_1&amp;ctx_tim=2018-04-25T22%253A40%253A53IST&amp;ctx_ver=Z39.88-2004&amp;url_ctx_fmt=info:ofi/fmt:kev:mtx:ctx&amp;url_ver=Z39.88-2004&amp;rfr_id=info:sid/primo.exlibrisgroup.com-NEU_ALMA&amp;req_id=254201822404822577042405007970210&amp;rft_dat=ie=01NEU_INST:51266520600001401,language=eng,view=NU&amp;svc_dat=viewit&amp;u.ignore_date_coverage=true&amp;req.skin=nu-nui&amp;is_new_ui=true&amp;Force_direct=false#" onclick="getLicenseInfo(&#39;53266520580001401&#39;,&#39;/almaws/internalRest/uresolver/customerId/1390/institutionId/1401/licenseId/2293579490001401&#39;,&#39;show&#39;);">
+		     				Show license</a>
+
+		     				<a id="53266520580001401_hide" style="margin-left:2%;display:none;" href="https://northeastern.userservices.exlibrisgroup.com/view/uresolver/01NEU_INST/openurl?ctx_enc=info:ofi/enc:UTF-8&amp;ctx_id=10_1&amp;ctx_tim=2018-04-25T22%253A40%253A53IST&amp;ctx_ver=Z39.88-2004&amp;url_ctx_fmt=info:ofi/fmt:kev:mtx:ctx&amp;url_ver=Z39.88-2004&amp;rfr_id=info:sid/primo.exlibrisgroup.com-NEU_ALMA&amp;req_id=254201822404822577042405007970210&amp;rft_dat=ie=01NEU_INST:51266520600001401,language=eng,view=NU&amp;svc_dat=viewit&amp;u.ignore_date_coverage=true&amp;req.skin=nu-nui&amp;is_new_ui=true&amp;Force_direct=false#" onclick="getLicenseInfo(&#39;53266520580001401&#39;,&#39;/almaws/internalRest/uresolver/customerId/1390/institutionId/1401/licenseId/2293579490001401&#39;,&#39;hide&#39;);">
+		     				Hide license</a>
+						</li>
+					<div class="publicNoteTitle">Public notes:</div>
+						<li><div class="publicNote"><img src="./question faq.ico" height="13" width="13" style="PADDING-RIGHT: 5px"><a href="http://help.safaribooksonline.com.ezproxy.neu.edu/faqs" target="_blank&quot;">Ebook help guide</a><br></div></li>
+					<div id="div_53266520580001401"></div>
+	        	</ul>
+		<!-- TODO add DigitalServiceWrapper -->
+
+	<br>
+</div>
+
+
+<!-- DEBUG:
+ [<xml-fragment xmlns:u="http://com/exlibris/urm/uresolver/xmlbeans/u" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <u:context_object>
+    <u:keys>
+      <u:key id="ctx_enc">info:ofi/enc:UTF-8</u:key>
+      <u:key id="rft.stitle">Python data structures and algorithms :</u:key>
+      <u:key id="rft.pub">Packt Publishing,</u:key>
+      <u:key id="ctx_tim">2018-04-25T22%3A40%3A53IST</u:key>
+      <u:key id="rft.place">Birmingham, U.K. :</u:key>
+      <u:key id="ctx_ver">Z39.88-2004</u:key>
+      <u:key id="licenseEnable">true</u:key>
+      <u:key id="memberProxyServer">http://ezproxy.neu.edu/login</u:key>
+      <u:key id="sfx.sid">primo.exlibrisgroup.com-NEU_ALMA</u:key>
+      <u:key id="memberProxyIp">155.33.16.124</u:key>
+      <u:key id="svc.profile">viewit</u:key>
+      <u:key id="rft.btitle">Python data structures and algorithms : improve the performance and speed of your applications /</u:key>
+      <u:key id="rft.genre">book</u:key>
+      <u:key id="memberUseProxy">Selective</u:key>
+      <u:key id="Force_direct">false</u:key>
+      <u:key id="Incoming_URL">http%3A%2F%2Fnortheastern.userservices.exlibrisgroup.com%2Fview%2Furesolver%2F01NEU_INST%2Fopenurl%3Fdebug%3Dtrue%26ctx_enc%3Dinfo%3Aofi%2Fenc%3AUTF-8%26ctx_id%3D10_1%26ctx_tim%3D2018-04-25T22%25253A40%25253A53IST%26ctx_ver%3DZ39.88-2004%26url_ctx_fmt%3Dinfo%3Aofi%2Ffmt%3Akev%3Amtx%3Actx%26url_ver%3DZ39.88-2004%26rfr_id%3Dinfo%3Asid%2Fprimo.exlibrisgroup.com-NEU_ALMA%26req_id%3D254201822404822577042405007970210%26rft_dat%3Die%3D01NEU_INST%3A51266520600001401%2Clanguage%3Deng%2Cview%3DNU%26svc_dat%3Dviewit%26u.ignore_date_coverage%3Dtrue%26req.skin%3Dnu-nui%26is_new_ui%3Dtrue%26Force_direct%3Dfalse</u:key>
+      <u:key id="url_ctx_fmt">info:ofi/fmt:kev:mtx:ctx</u:key>
+      <u:key id="req_id">254201822404822577042405007970210</u:key>
+      <u:key id="institution">1401</u:key>
+      <u:key id="rft.eisbn_10">1-78646-533-7</u:key>
+      <u:key id="rft.oclcnum">990784724</u:key>
+      <u:key id="rft.eisbn_13">978-1-78646-533-7</u:key>
+      <u:key id="req.skin">nu-nui</u:key>
+      <u:key id="req.skin">NU</u:key>
+      <u:key id="req.id">254201822404822577042405007970210</u:key>
+      <u:key id="rft.mms_id">9951627391001401</u:key>
+      <u:key id="user_ip" xsi:nil="true"/>
+      <u:key id="held_by">01NEU_INST:51266520600001401</u:key>
+      <u:key id="inventory_id">51266520600001401</u:key>
+      <u:key id="rfr_id">info:sid/primo.exlibrisgroup.com-NEU_ALMA</u:key>
+      <u:key id="rft.inventory_id">51266520600001401</u:key>
+      <u:key id="is_new_ui">true</u:key>
+      <u:key id="rft.eisbn">1786465337</u:key>
+      <u:key id="rft.eisbn">9781786465337</u:key>
+      <u:key id="publication_place">Birmingham, U.K. :</u:key>
+      <u:key id="orig_inventory_id">51266520600001401</u:key>
+      <u:key id="rft.object_type">BOOK</u:key>
+      <u:key id="url_ver">Z39.88-2004</u:key>
+      <u:key id="req.language">eng</u:key>
+      <u:key id="memberProxyType">EZProxy</u:key>
+      <u:key id="rft.publisher">Packt Publishing,</u:key>
+      <u:key id="ctx_id">10_1</u:key>
+      <u:key id="rft.au">Baka, Benjamin, author.</u:key>
+      <u:key id="rft.pubdate">2017.</u:key>
+      <u:key id="rft_dat">ie=01NEU_INST:51266520600001401,language=eng,view=NU</u:key>
+      <u:key id="u.ignore_date_coverage">true</u:key>
+      <u:key id="rft.title">Python data structures and algorithms : improve the performance and speed of your applications /</u:key>
+      <u:key id="customer">1390</u:key>
+      <u:key id="rfr.rfr">primo.exlibrisgroup.com-NEU_ALMA</u:key>
+    </u:keys>
+  </u:context_object>
+  <u:context_services>
+    <u:context_service context_service_id="8182382300001401" service_type="getFullTxt">
+      <u:keys>
+        <u:key id="portfolio_PID">53266520580001401</u:key>
+        <u:key id="request_source">neu_alma</u:key>
+        <u:key id="package_name">Safari Premium Content Library</u:key>
+        <u:key id="package_public_name">Safari</u:key>
+        <u:key id="package_display_name">Safari</u:key>
+        <u:key id="interface_name">Safari Premium Content Library</u:key>
+        <u:key id="package_pid">61211407440001401</u:key>
+        <u:key id="service_type_description">Full text available via</u:key>
+        <u:key id="static_url">true</u:key>
+        <u:key id="parser_program">Bulk::BULK</u:key>
+        <u:key id="parse_parameters">jkey=http://proquest.safaribooksonline.com/?uiCode=neu%26xmlId=9781786467355</u:key>
+        <u:key id="Authentication_note"/>
+        <u:key id="public_note">&lt;img src="http://www.veryicon.com/icon/ico/System/Blue%20Bits/question%20faq.ico" height="13" width="13" style="PADDING-RIGHT: 5px">&lt;a href="http://help.safaribooksonline.com.ezproxy.neu.edu/faqs" target=_blank">Ebook help guide&lt;/a>&lt;br/></u:key>
+        <u:key id="proxy_enabled">true</u:key>
+        <u:key id="proxy_selected">DEFAULT</u:key>
+        <u:key id="related_title">@TITLE (@RelationType)</u:key>
+        <u:key id="is_related_service">false</u:key>
+        <u:key id="is_closly_related">false</u:key>
+        <u:key id="license_exist">true</u:key>
+        <u:key id="license_url">/almaws/internalRest/uresolver/customerId/1390/institutionId/1401/licenseId/2293579490001401</u:key>
+        <u:key id="crossref_enabled">no</u:key>
+        <u:key id="electronic_material_type">BOOK</u:key>
+        <u:key id="Availability"/>
+      </u:keys>
+      <u:resolution_url>/view/action/uresolver.do?operation=resolveService&amp;package_service_id=8182382300001401&amp;institutionId=1401&amp;customerId=1390</u:resolution_url>
+    </u:context_service>
+  </u:context_services>
+  <u:performance_counters>
+    <u:performance_counter name="TOTAL" duration="0.502"/>
+    <u:performance_counter name="MMS_LOOKUP" duration="0.001"/>
+    <u:performance_counter name="ENRICH" duration="0.0"/>
+    <u:performance_counter name="PARSE" duration="0.0"/>
+    <u:performance_counter name="GET_SERVICES" duration="0.014"/>
+    <u:performance_counter name="FILTER" duration="0.0"/>
+    <u:performance_counter name="SAVE" duration="0.005"/>
+    <u:performance_counter name="GET_SINGLE_SERVICE" duration="0.0"/>
+    <u:performance_counter name="EXECUTE_TARGET_PARSER" duration="0.0"/>
+    <u:performance_counter name="GET_URESOLVER_CONTENT" duration="0.0"/>
+    <u:performance_counter name="UPDATE_SELECTED" duration="0.0"/>
+  </u:performance_counters>
+</xml-fragment>]
+ END DEBUG-->
+	</form>
+
+
+<div style="clear: both; display: block;"></div></body></html>

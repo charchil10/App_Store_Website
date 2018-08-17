@@ -1,0 +1,12 @@
+{% extends "appstore/header.html" %}
+{% block content %}
+	<div align ="center">
+	<h3>Post a New Application </h3>
+	</div>
+	<br>
+	<form method  = "POST" class= "post-form"> 
+		{% csrf_token %}
+		{{ form.as_p}}
+		<button type = "submit" class = "save btn btn-default">Save</button>
+	</form>
+{% endblock %}

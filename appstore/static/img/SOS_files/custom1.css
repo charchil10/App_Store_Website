@@ -1,0 +1,232 @@
+/*change header bg colors*/
+prm-topbar .top-nav-bar {
+  background-color: #f3f3f3;
+}
+prm-search-bar {
+  background-color: #c00;
+}
+prm-journals-search-bar.animate-search-bar {
+  background-color: #c00;
+}
+prm-browse-search-bar {
+  background-color: #cc0000;
+}
+prm-atoz-search-bar {
+  background-color: #c00;
+}
+prm-topbar .md-button, prm-topbar .md-button .item-content {
+  color: #666;
+}
+prm-search-bookmark-filter #favorites-button {
+  background-color: rgba(51,51,51,.45);
+}
+prm-user-area, md-fab-actions.md-toolbar-tools {
+  background-color: rgba(51,51,51,.45) !important;
+}
+prm-search-bar .search-switch-buttons .md-button.switch-to-advanced {
+  font-weight: bold;
+}
+/*end change header bg colors*/
+
+/*logo fixes*/
+prm-topbar prm-logo {
+  width: auto;
+  max-width: 100%;
+}
+prm-logo div.product-logo {
+  display:none;
+}
+prm-logo div.product-logo-local {
+  display: flex;
+  flex-direction: column;
+}
+prm-logo .logo-image {
+  max-height: 35px;
+  max-width: 300px;
+  min-width: 200px;
+}
+prm-logo .logo-image.sos {
+  max-height: 25px;
+  max-width: 200px;
+}
+prm-logo a:focus, prm-logo a:hover {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+  box-shadow: none;
+}
+prm-topbar {
+  height: 85px;
+}
+/*end logo fixes*/
+
+/*worldcat passthrough*/
+#worldcat-button {
+  color: #fff;
+  font-weight: bold;
+  position: absolute;
+  left: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  min-height: 25px;
+  line-height: 25px;
+  top: 0px;
+}
+#worldcat-button:hover, #worldcat-button:focus, #worldcat-button:hover:not([disabled]) {
+  color: #fff;
+  background-color: rgba(51,51,51,.1);
+}
+#worldcat-button img {
+  vertical-align: text-bottom;
+  padding-right: 2px;
+}
+.advanced-mode #worldcat-button {
+  font-weight: normal;
+  color: #000;
+}
+#worldcat-mobile-button {
+  vertical-align: sub;
+}
+
+.__sm.__gt-xs .search-actions button.md-icon-button {
+  padding-top: 15px;
+}
+#worldcat-mobile-button img {
+  padding-top: 5px;
+}
+.__xs #worldcat-mobile-button img {
+  padding-top: 13px;
+}
+
+prm-search-bar .search-switch-buttons .md-button.switch-to-advanced, prm-search-bar .search-switch-buttons .md-button.switch-to-simple {
+  top: 54px;
+  min-height: 25px;
+  line-height: 25px;
+}
+/*end worldcat passthrough*/
+
+/*for report a problem*/
+.icon-tabs md-tab-item .button-text, .icon-tabs md-tab-item:not([disabled]) .button-text {
+  letter-spacing: .03em;
+}
+
+prm-action-list .button-text {
+  white-space: normal;
+}
+/*end report a problem */
+
+/* to hide icons in personal account area*/
+prm-account-overview md-tab-content prm-icon.giant-icon {
+  display: none;
+}
+/*end hide icons in personal account area*/
+
+/*for long tab name in full view*/
+prm-full-view .services-index-under .md-button {
+  white-space: normal;
+  line-height: 18px;
+}
+/*end long tab name in full view*/
+
+/*start fix for mystery gray bar from listserv*/
+body.md-dialog-is-showing  {
+    overflow-x:visible!important;
+}
+/*end fix for mystery gray bar from listserv*/
+
+/*move snowman paginator to right*/
+.__gt-md prm-page-nav-menu {
+  right: 1em;
+  left: auto;
+}
+
+.__gt-sm prm-page-nav-menu {
+  right: 1em;
+  left: auto;
+}
+
+.__gt-xs prm-page-nav-menu {
+  right: 1em;
+  left: auto;
+}
+
+prm-page-nav-menu {
+  right: 1em;
+  left: auto;
+}
+
+/*end move snowman paginator to right*/
+
+/* hide barcode column */
+.itemsList #TABLE_DATA_item_list th:first-of-type, .itemsList #TABLE_DATA_item_list td:first-of-type {
+  display: none !important;
+}
+/* end hide barcode column */
+
+/* hide tags */
+#tags {display:none;}
+button[aria-label="Tags"]{display:none;}
+/* end hide tags */
+
+/* Home page style changes */
+.md-headline {
+	color: #1e2a36;
+	font-weight: 500;
+}
+
+.md-headline img {
+	height: 40px;
+	width: 40px;
+	float: left;
+	margin-right: 6px;
+}
+
+md-card md-card-content img
+{
+    width: 10px;
+    min-width: 100%;
+}
+
+md-card.default-card md-card-title
+{
+    padding-bottom: 0px;
+}
+
+md-card md-card-content ul
+{
+    padding-top: 0px;
+    margin-left: 20px;
+}
+
+/* hide link icon next to "Full text available" non-link */
+prm-search-result-availability-line md-icon
+{
+	display: none; 
+}
+
+/* End Home page style changes */
+
+/* Browzine styles */
+.browzine-icon  {
+  margin-right:2px;
+}
+
+.browzine-external-link {
+  width:15px;
+  height:15px;
+  min-width:15px;
+  min-height:15px;
+}
+/* End Browzine styles */
+
+/* force column width to 100% when on mobile (i.e., __xs) */
+div.layout-column.flex-xs.flex-40 {
+	max-width: 100%;
+}
+
+div.layout-column.flex-xs.flex-60 {
+	max-width: 100%;
+}
+/* end force column width */
